@@ -34,17 +34,25 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 ```bash
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 ```
-5: Skapa en ny migrations-fil och kör denna:
+
+5: Ändra överst i Views/Shared/_LoginPartial.cshtml till att använda ApplicationUser:
+```bash
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+6: Skapa en ny migrations-fil och kör denna:
 ```bash
 dotnet ef migrations add ModifiedUserFields
 dotnet ef database update
 ```
-6: Generera filer för "scaffolding":
+7: Generera filer för "scaffolding":
 ```bash
 dotnet aspnet-codegenerator identity -dc ApplicationDbContext --force
 ```
 ("force" skriver över eventuellt befintliga filer, så kör denna växel med försiktighet)
-7: Modifiera Areas/Identity/Pages/Account/Register.cshtml med dessa nya två fält:
+
+8: Modifiera Areas/Identity/Pages/Account/Register.cshtml med dessa nya två fält:
 ```bash
 <div class="form-floating mb-3">
     <input asp-for="Input.FirstName" class="form-control" placeholder="John" />
@@ -60,7 +68,8 @@ dotnet aspnet-codegenerator identity -dc ApplicationDbContext --force
 
 <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
 ```
-8: Modifiera **Register.cshtml.cs** med följande ändring längst ner i InputModel:
+
+9: Modifiera **Register.cshtml.cs** med följande ändring längst ner i InputModel:
 ```bash
 // Extra fields
 [Display(Name = "First Name")]
@@ -69,7 +78,8 @@ public string FirstName { get; set; }
 [Display(Name = "Last Name")]
 public string LastName { get; set; }
 ```
-9: Modifiera metoden för **CreateUser** med:
+
+10: Modifiera metoden för **CreateUser** med:
 ```bash
 try
     {
@@ -82,9 +92,9 @@ try
         return user;
     }
 ```
-10: Klart för testkörning - registrera ett konto och fyll i för- och efternamn.
+11: Klart för testkörning - registrera ett konto och fyll i för- och efternamn.
 
-11: För att läsa ut dessa fält går det exempelvis att göra såhär:
+12: För att läsa ut dessa fält går det exempelvis att göra såhär:
 ```bash
 @{
     var user = await UserManager.GetUserAsync(User);
