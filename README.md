@@ -97,6 +97,9 @@ try
 
 12: För att läsa ut dessa fält går det exempelvis att göra såhär:
 ```bash
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
 @{
     var user = await UserManager.GetUserAsync(User);
 
