@@ -113,6 +113,31 @@ try
 }
 ```
 
+Eller i en Controller:
+```bash
+// Controllers/HomeController.cs
+public class HomeController : Controller
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    
+    public HomeController(UserManager<ApplicationUser> userManager)
+    {
+        _userManager = userManager;
+    }
+    
+    public async Task<IActionResult> Index()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null)
+        {
+            ViewData["WelcomeMessage"] = $"Välkommen {user.FirstName} {user.LastName}!";
+        }
+        return View();
+    }
+}
+```
+
+
 ## Av
 Mattias Dahlgren, mattias.dahlgren@miun.se
 
